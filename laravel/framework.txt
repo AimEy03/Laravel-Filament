@@ -1,0 +1,133 @@
+----------CREATE LOGIN----------
+
+laravel new project_name //create folder project
+
+cd project_name
+
+php artisan serve //run project
+
+
+php artisan make:migration create_table_name //nama database sediri
+(atau)
+php artisan migrate //create database nama auto
+<yes>
+
+
+(atau setup dulu database dkt .env baru php artisan migrate)
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=familysystem //bia sama ngan nama database
+DB_USERNAME=root //mcm biasa
+DB_PASSWORD= //password jangan tanya ane. itu laptop ente
+
+
+
+composer require filament/filament:"^2.0"
+
+php artisan make:filament-user
+name : admin
+email address : admin@gmail.com
+password : 123asd123
+<no>
+
+localhost : http://127.0.0.1:8000/admin
+
+----------CREATE FRAMEWORK---------
+
+create resource: php artisan make:filament-resource User (atau nama lain utk dkt dashboard)
+
+UserResource - ejah situ sama ngan mcm dkt database
+
+folder Filament>Resources>nama fail.php
+
+public static function table(Table $table): Table
+    {
+        return $table  //view data hk ada dlm database ke table
+            ->columns([
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('password'),
+                Tables\Columns\TextColumn::make('role'),
+
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]);
+    }
+
+
+----------Function Update/Delete/Add----------
+
+php artisan make:model Customer -m 
+(-m untuk migrate. create dashboard baru)
+(atau nama lain selain customer.Kalu paka hk User takdi x yah create baru)
+
+folder database>migration
+
+public function up(): void
+    {
+	// Bia sama macam dkt database
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('role');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+folder Models>nama model
+
+	protected $fillable = [
+        	'name',
+        	'email',
+        	'password',
+        	'role',
+	];
+
+
+php artisan migrate
+(table create dah dkt database)
+(insert data dalam database untuk test papar data)
+(data papar dah cuma x leh nk add,update ngan delete lagi)
+
+
+folder Filament>Resources>nama fail.php
+
+
+
+	public static function form(Form $form): Form
+    	{
+        	return $form  //insert input field
+            	->schema([
+                	Forms\Components\TextInput::make('name')->required(),
+                	Forms\Components\TextInput::make('role')->required(),
+                	Forms\Components\TextInput::make('email')->email()->required(),
+                	Forms\Components\TextInput::make('password')->required(),
+            	]);
+    	}
+(Baru Jadi)
+
+x jadi jugop cek file .env
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=familysystem //bia sama ngan nama database
+DB_USERNAME=root //mcm biasa
+DB_PASSWORD= //password jangan tanya ane. itu laptop ente
+
+
+php artisan make:model FamilyMember -mcr
+(triple create-model/controller/database)
